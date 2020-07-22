@@ -9,13 +9,20 @@ import { Summary } from './Summary';
 import { AddModal } from './AddModal';
 
 function positionCards(cards, width, height) {
+  const updatedCards = {};
+
   Object.values(cards).forEach(
     (card) =>
-      (card.position = {
-        left: card.offset.x + width * 0.5,
-        top: card.offset.y + height * 0.5,
+      (updatedCards[card.id] = {
+        ...card,
+        position: {
+          left: card.offset.x + width * 0.5,
+          top: card.offset.y + height * 0.5,
+        },
       })
   );
+
+  return updatedCards;
 }
 
 function parseData() {
@@ -27,19 +34,6 @@ function parseData() {
 
   return cards;
 }
-
-// function addCard(cards, label) {
-//   const id = uuid.v4();
-
-//   cards[id] = {
-//     id,
-//     label,
-//     offset: {
-//       x: 0,
-//       y: 0,
-//     },
-//   };
-// }
 
 function addCard(cards, label) {
   const id = uuid.v4();
@@ -70,15 +64,9 @@ function App() {
   useEffect(() => {
     if (height && width) {
       const parsedCards = parseData();
-      positionCards(parsedCards, width, height);
-      setCards({ ...parsedCards });
+      setCards(positionCards(parsedCards, width, height));
     }
   }, [height, width]);
-
-  // function handleDelete(card) {
-  //   delete cards[card.id];
-  //   setCards({ ...cards });
-  // }
 
   function handleDelete(card) {
     const clonedCards = { ...cards };
@@ -109,12 +97,18 @@ function App() {
 
         const { card, dragOffset } = dragCardInfo;
 
-        card.position = {
-          top: ev.pageY - dragOffset.y,
-          left: ev.pageX - dragOffset.x,
+        const updatedCards = {
+          ...cards,
+          [card.id]: {
+            ...card,
+            position: {
+              top: ev.pageY - dragOffset.y,
+              left: ev.pageX - dragOffset.x,
+            },
+          },
         };
 
-        setCards({ ...cards });
+        setCards(updatedCards);
       }}
     >
       {cardEls}
@@ -125,9 +119,12 @@ function App() {
           isOpen={isAddOpen}
           onClose={() => setIsAddOpen(false)}
           onAdd={(cardText) => {
-            addCard(cards, cardText);
-            positionCards(cards, width, height);
-            setCards(cards);
+            const updatedCards = positionCards(
+              addCard(cards, cardText),
+              width,
+              height
+            );
+            setCards(updatedCards);
           }}
         />
       )}
