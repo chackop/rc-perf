@@ -1,13 +1,19 @@
-import React from 'react';
-import levenshtein from 'levenshtein';
+import React, { useState } from "react";
+import levenshtein from "levenshtein";
+import "./Summary.css";
+import { CornerButton } from "./CornerButton";
 
 export const Summary = React.memo(
   function Summary(props) {
+    const [position, setPosition] = useState("top-right");
+
     const cards = Object.values(props.cards);
 
+
+    console.time('calc-distances')
     const distances = { max: 0, min: 100000 };
-    cards.forEach((currentCard) => {
-      cards.forEach((compareCard) => {
+    cards.forEach(currentCard => {
+      cards.forEach(compareCard => {
         if (compareCard === currentCard) {
           return;
         }
@@ -17,21 +23,18 @@ export const Summary = React.memo(
         distances.min = Math.min(distances.min, distance);
       });
     });
+    console.timeEnd('calc-distances')
 
     return (
-      <div
-        style={{
-          position: 'absolute',
-          right: 20,
-          top: 20,
-          backgroundColor: '#fafafa',
-          padding: '10px',
-          border: '3px solid #333',
-        }}
-      >
+      <div className={`Summary Summary-${position}`}>
         <div>You have {Object.keys(props.cards).length} cards!</div>
         <div>Max difference in labels: {distances.max}</div>
         <div>Min difference in labels: {distances.min}</div>
+
+        <CornerButton setPosition={setPosition} corner="top-right" position={position} />
+        <CornerButton setPosition={setPosition} corner="top-left" position={position} />
+        <CornerButton setPosition={setPosition} corner="bottom-left" position={position} />
+        <CornerButton setPosition={setPosition} corner="bottom-right" position={position} />
       </div>
     );
   },

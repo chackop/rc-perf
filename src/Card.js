@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export const Card = React.memo(
   function Card(props) {
@@ -6,23 +6,23 @@ export const Card = React.memo(
 
     return (
       <div
-        onMouseDown={(ev) => {
+        onMouseDown={ev => {
           const clickOffset = {
             x: ev.clientX - parseFloat(ev.currentTarget.style.left),
-            y: ev.clientY - parseFloat(ev.currentTarget.style.top),
+            y: ev.clientY - parseFloat(ev.currentTarget.style.top)
           };
           onDragStart(clickOffset);
         }}
         onMouseUp={onDragEnd}
         onDoubleClick={onDoubleClick}
         style={{
-          position: 'absolute',
+          position: "absolute",
           left: card.position.left,
           top: card.position.top,
-          backgroundColor: '#fff',
-          padding: '25px',
-          cursor: 'move',
-          userSelect: 'none',
+          backgroundColor: "#fff",
+          padding: "25px",
+          cursor: "move",
+          userSelect: "none"
         }}
         key={card.id}
       >
