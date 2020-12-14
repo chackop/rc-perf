@@ -1,3 +1,5 @@
+React App to demo the usage of data fetching and rendering using suspense
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
